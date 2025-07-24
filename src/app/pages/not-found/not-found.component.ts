@@ -7,10 +7,10 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="container text-center py-5">
-      <h1 class="display-1 fw-bold">404</h1>
-      <p class="lead">Oops, la página que estás buscando no existe.</p>
-      <a routerLink="/characters" class="btn btn-primary mt-3">Volver al inicio</a>
+    <div>
+      <h1>404</h1>
+      <p>Oops, la página que estás buscando no existe.</p>
+      <a routerLink="/characters">Volver al inicio</a>
     </div>
   `
 })

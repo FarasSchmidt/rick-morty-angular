@@ -9,37 +9,49 @@ import { GenderTranslatePipe } from '../../pipes/gender-translate-pipe';
 @Component({
   selector: 'app-character-detail',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     StatusTranslatePipe,
     GenderTranslatePipe
   ],
+  styleUrls: ['./character-detail.css'],
   template: `
     <div *ngIf="character">
       <div>
         <div>
           <img [src]="character.image" [alt]="character.name" />
         </div>
-        <div class="col-md-8">
+        <div>
           <h2>{{ character.name }}</h2>
-    <p>
-      <strong>Estado:</strong> {{ character.status | statusTranslate }}
-    </p>
+
+          <p>
+            <strong>Estado:</strong>
+            <span
+              [ngClass]="{
+                'status-alive': character.status === 'Alive',
+                'status-dead': character.status === 'Dead',
+                'status-unknown': character.status === 'unknown'
+              }"
+            >
+              {{ character.status | statusTranslate }}
+            </span>
+          </p>
 
           <p><strong>Especie:</strong> {{ character.species }}</p>
-          <p><strong>Género:</strong> {{ character.gender | genderTranslate  }}</p>
+          <p><strong>Género:</strong> {{ character.gender | genderTranslate }}</p>
           <p><strong>Origen:</strong> {{ character.origin.name }}</p>
           <p><strong>Ubicación:</strong> {{ character.location.name }}</p>
 
-          <h4 class="mt-4">Episodios</h4>
-          <ul class="list-group">
-            <li class="list-group-item" *ngFor="let ep of episodes">{{ ep }}</li>
+          <h4>Episodios</h4>
+          <ul>
+            <li *ngFor="let ep of episodes">{{ ep }}</li>
           </ul>
         </div>
       </div>
     </div>
-  `,
-  styles: []
+  `
 })
+
 export class CharacterDetailComponent implements OnInit {
   character: any;
   episodes: string[] = [];
