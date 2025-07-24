@@ -7,11 +7,11 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <a [routerLink]="['/characters', character.id]" class="text-decoration-none text-dark">
-      <div class="card h-100">
-        <img [src]="character.image" class="card-img-top" [alt]="character.name" />
-        <div class="card-body">
-          <h5 class="card-title text-center">{{ character.name }}</h5>
+    <a [routerLink]="['/characters', character.id]">
+      <div>
+        <img [src]="character.image" [alt]="character.name" />
+        <div>
+          <h5>{{ character.name }}</h5>
         </div>
       </div>
     </a>

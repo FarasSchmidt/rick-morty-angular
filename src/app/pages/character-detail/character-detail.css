@@ -9,6 +9,6 @@
 }
 
 .status-unknown {
-  color: goldenrod;
+  color: rgb(216, 176, 0);
   font-weight: bold;
 }
