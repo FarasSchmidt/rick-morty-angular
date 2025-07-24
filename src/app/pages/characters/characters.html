@@ -1,0 +1,26 @@
+<div>
+  <h1>Rick y Morty personajes</h1>
+
+  <div>
+    <div
+      *ngFor="let char of characters"
+    >
+      <app-character-card [character]="char"></app-character-card>
+    </div>
+  </div>
+
+  <div>
+    <button
+      [disabled]="!info?.prev"
+      (click)="goToPage(currentPage - 1)"
+    >
+      Prev
+    </button>
+    <button
+      [disabled]="!info?.next"
+      (click)="goToPage(currentPage + 1)"
+    >
+      Next
+    </button>
+  </div>
+</div>

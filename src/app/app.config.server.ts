@@ -1,12 +1,14 @@
-import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
-import { provideServerRendering, withRoutes } from '@angular/ssr';
-import { appConfig } from './app.config';
-import { serverRoutes } from './app.routes.server';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { CharactersComponent } from './pages/characters/characters.component';
 
-const serverConfig: ApplicationConfig = {
-  providers: [
-    provideServerRendering(withRoutes(serverRoutes))
-  ]
-};
+const routes: Routes = [
+  { path: '', redirectTo: 'characters', pathMatch: 'full' },
+  { path: 'characters', component: CharactersComponent }
+];
 
-export const config = mergeApplicationConfig(appConfig, serverConfig);
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}

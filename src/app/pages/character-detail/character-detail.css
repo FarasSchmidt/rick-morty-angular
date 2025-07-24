@@ -1,0 +1,14 @@
+.status-alive {
+  color: green;
+  font-weight: bold;
+}
+
+.status-dead {
+  color: red;
+  font-weight: bold;
+}
+
+.status-unknown {
+  color: goldenrod;
+  font-weight: bold;
+}
