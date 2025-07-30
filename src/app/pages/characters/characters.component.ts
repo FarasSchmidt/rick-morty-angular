@@ -2,47 +2,23 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RickMortyService } from '../../services/rick-morty.service';
 import { CharacterCardComponent } from '../../components/character-card/character-card.component';
+import { FormsModule } from '@angular/forms';
+import { Character } from '../../types/character.type';
 
 @Component({
   selector: 'app-characters',
   standalone: true,
-  imports: [CommonModule, CharacterCardComponent],
-  template: `
-    <div>
-      <h1>Rick y Morty personajes</h1>
-
-      <div>
-        <div
-          *ngFor="let char of characters"
-        >
-          <app-character-card [character]="char"></app-character-card>
-        </div>
-      </div>
-
-      <div>
-        <button
-          [disabled]="!info?.prev"
-          (click)="goToPage(currentPage - 1)"
-        >
-          Prev
-        </button>
-        <button
-          [disabled]="!info?.next"
-          (click)="goToPage(currentPage + 1)"
-        >
-          Next
-        </button>
-      </div>
-    </div>
-  `,
-  styles: []
+  imports: [CommonModule, CharacterCardComponent, FormsModule],
+  templateUrl: './characters.html',
+  styleUrl: 'characters.css'
 })
 export class CharactersComponent implements OnInit {
-  characters: any[] = [];
+  characters: Character[] = [];
+  terminoBusqueda: string = ""
   info: any;
   currentPage = 1;
 
-  constructor(private rmService: RickMortyService) {}
+  constructor(private rmService: RickMortyService) { }
 
   ngOnInit(): void {
     this.loadCharacters();
@@ -52,7 +28,12 @@ export class CharactersComponent implements OnInit {
     this.rmService.getCharacters(this.currentPage).subscribe((data: any) => {
       this.characters = data.results;
       this.info = data.info;
+      console.log(this.characters)
     });
+  }
+
+  filterCharacters(criteria: string): any {
+    return this.characters.filter(char => char.name.includes(criteria))
   }
 
   goToPage(page: number) {

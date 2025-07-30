@@ -1,1 +1,34 @@
-<p>character-detail works!</p>
+<div *ngIf="character" class="character-detail-container">
+  <div class="character-row">
+    <div class="character-column">
+      <div class="character-info blackBackground">
+        <img class="character-image" [src]="character.image" [alt]="character.name" />
+        <h2>Información</h2>
+        <p><strong>Nombre:</strong> {{ character.name }}</p>
+        <p>
+          <strong>Estado:</strong>
+          <span [ngClass]="{
+                'status-alive': character.status === 'Alive',
+                'status-dead': character.status === 'Dead',
+                'status-unknown': character.status === 'unknown'
+              }">
+            {{ character.status | statusTranslate }}
+          </span>
+        </p>
+
+        <p><strong>Especie:</strong> {{ character.species }}</p>
+        <p><strong>Género:</strong> {{ character.gender | genderTranslate }}</p>
+        <p><strong>Origen:</strong> {{ character.origin.name }}</p>
+        <p><strong>Ubicación:</strong> {{ character.location.name }}</p>
+
+
+      </div>
+    </div>
+    <div class="episode-list blackBackground">
+      <h4>Episodios</h4>
+      <ul>
+        <li *ngFor="let ep of episodes">{{ ep }} </li>
+      </ul>
+    </div>
+  </div>
+</div>

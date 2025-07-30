@@ -1,0 +1,58 @@
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  padding: 2rem;
+  justify-items: center;
+}
+
+input[type="text"] {
+  display: block;
+  margin: 0 auto 1.5rem auto;
+  padding: 0.6rem 1rem;
+  width: 300px;
+  border-radius: 6px;
+  border: none;
+  background-color: #2c2c2c;
+  color: #fff;
+  outline: none;
+}
+
+input[type="text"]::placeholder {
+  color: #aaa;
+}
+
+h1 {
+  color: #ffffff;
+}
+
+.pagination-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.pagination-buttons button {
+  padding: 0.6rem 1.2rem;
+  background-color: #2c2c2c;
+  color: #ffffff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pagination-buttons button:hover:not(:disabled) {
+  background-color: #3a3a3a;
+  border-color: #666;
+}
+
+.pagination-buttons button:disabled {
+  background-color: #1e1e1e;
+  color: #777;
+  border-color: #333;
+  cursor: not-allowed;
+}

@@ -2,25 +2,20 @@
   <h1>Rick y Morty personajes</h1>
 
   <div>
-    <div
-      *ngFor="let char of characters"
-    >
-      <app-character-card [character]="char"></app-character-card>
+    <input type="text" [(ngModel)]="terminoBusqueda" placeholder="Buscar personaje" />
+    <div class="card-container">
+      <app-character-card *ngFor="let char of filterCharacters(terminoBusqueda)"
+        [character]="char"></app-character-card>
     </div>
   </div>
 
-  <div>
-    <button
-      [disabled]="!info?.prev"
-      (click)="goToPage(currentPage - 1)"
-    >
-      Prev
+  <div class="pagination-buttons">
+    <button [disabled]="!info?.prev" (click)="goToPage(currentPage - 1)">
+      Anterior
     </button>
-    <button
-      [disabled]="!info?.next"
-      (click)="goToPage(currentPage + 1)"
-    >
-      Next
+
+    <button [disabled]="!info?.next" (click)="goToPage(currentPage + 1)">
+      Siguiente
     </button>
   </div>
 </div>
