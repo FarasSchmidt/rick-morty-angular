@@ -11,7 +11,7 @@ export class RickMortyService {
   constructor(private http: HttpClient) { }
 
   getCharacters(page: number = 1): Observable<any> {
-    return this.http.get(`${this.API_URL}/character?page=${page}`);
+    return this.http.get(`${this.API_URL}/character?page=${page}&count=10`);
   }
 
   getCharacterById(id: number): Observable<any> {

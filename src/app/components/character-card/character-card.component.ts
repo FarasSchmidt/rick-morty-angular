@@ -6,17 +6,8 @@ import { RouterModule } from '@angular/router';
   selector: 'app-character-card',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  template: `
-    <a [routerLink]="['/characters', character.id]">
-      <div>
-        <img [src]="character.image" [alt]="character.name" />
-        <div>
-          <h5>{{ character.name }}</h5>
-        </div>
-      </div>
-    </a>
-  `,
-  styles: []
+  templateUrl: './character-card.html',
+  styleUrls: ['./character-card.css']
 })
 export class CharacterCardComponent {
   @Input() character!: any;

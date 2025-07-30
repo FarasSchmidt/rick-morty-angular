@@ -15,41 +15,7 @@ import { GenderTranslatePipe } from '../../pipes/gender-translate-pipe';
     GenderTranslatePipe
   ],
   styleUrls: ['./character-detail.css'],
-  template: `
-    <div *ngIf="character">
-      <div>
-        <div>
-          <img [src]="character.image" [alt]="character.name" />
-        </div>
-        <div>
-          <h2>{{ character.name }}</h2>
-
-          <p>
-            <strong>Estado:</strong>
-            <span
-              [ngClass]="{
-                'status-alive': character.status === 'Alive',
-                'status-dead': character.status === 'Dead',
-                'status-unknown': character.status === 'unknown'
-              }"
-            >
-              {{ character.status | statusTranslate }}
-            </span>
-          </p>
-
-          <p><strong>Especie:</strong> {{ character.species }}</p>
-          <p><strong>Género:</strong> {{ character.gender | genderTranslate }}</p>
-          <p><strong>Origen:</strong> {{ character.origin.name }}</p>
-          <p><strong>Ubicación:</strong> {{ character.location.name }}</p>
-
-          <h4>Episodios</h4>
-          <ul>
-            <li *ngFor="let ep of episodes">{{ ep }}</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  `
+  templateUrl: './character-detail.html'
 })
 
 export class CharacterDetailComponent implements OnInit {
@@ -68,6 +34,7 @@ export class CharacterDetailComponent implements OnInit {
         this.character = data;
 
         const episodeUrls: string[] = data.episode;
+        console.log(data)
         this.episodes = episodeUrls.map(url => `Episodio ${url.split('/').pop()}`);
       });
     }
