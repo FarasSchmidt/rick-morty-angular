@@ -1,7 +1,7 @@
 .character-card {
   display: block;  
-  max-width: 220px;  
-  /* width: 100%;
+  /* max-width: 220px;   */
+  width: 100%;
   background-color: #1e1e1e;
   border-radius: 8px;
   padding: 1rem;
@@ -10,7 +10,6 @@
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
   text-decoration: none;
   transition: transform 0.2s ease;
-  margin: 0 auto;    */
 }
 
 .character-card img {
@@ -32,12 +31,3 @@ h5 {
   font-size: 1.1rem;
 }
 
-.character-grid {
-    display: flex;
-  /* display: grid; */
-  /* grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); */
-  gap: 1rem;
-  padding: 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
