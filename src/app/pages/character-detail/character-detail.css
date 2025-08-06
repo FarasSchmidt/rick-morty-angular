@@ -1,14 +1,12 @@
 .character-detail-container {
   display: flex;
   color: 	#bbbbbb;
-  background-color: blue;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   padding: 2rem;
-  width: 100vw;
-  height: 800px;
-  /* margin: 0 auto; */
+  width: 90vw;
+  height: 45vw;
 }
 
 .character-image {
@@ -19,7 +17,8 @@
 
 .character-info {
   margin-top: 1.5rem;
-  width: 400px;
+  width: 25vw;
+  height: 40vw;
   padding: 20px;
   border-radius: 8px;
 }
@@ -36,7 +35,8 @@
 }
 
 .episode-list {
-  max-height: 600px;
+  height: 40vw;
+  margin-top: 1.5rem;
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
