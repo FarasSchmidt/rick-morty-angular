@@ -1,6 +1,6 @@
 <div *ngIf="character" class="character-detail-container">
   <div class="character-row">
-    <div class="character-column">
+    <div>
       <div class="character-info blackBackground">
         <img class="character-image" [src]="character.image" [alt]="character.name" />
         <h2>Información</h2>
@@ -27,7 +27,7 @@
     <div class="episode-list blackBackground">
       <h4>Episodios</h4>
       <ul>
-        <li *ngFor="let ep of episodes">{{ ep }} </li>
+        <li *ngFor="let ep of episodes"> {{ ep.episode }} - {{ ep.name }} </li>
       </ul>
     </div>
   </div>
