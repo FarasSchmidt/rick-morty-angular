@@ -33,7 +33,7 @@ export class CharactersComponent implements OnInit {
   }
 
   filterCharacters(criteria: string): any {
-    return this.characters.filter(char => char.name.includes(criteria))
+    return this.characters.filter(char => char.name.toLowerCase().includes(criteria.toLowerCase()))
   }
 
   goToPage(page: number) {
