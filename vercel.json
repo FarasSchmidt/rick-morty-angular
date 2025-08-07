@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "src": "/characters/(.*)",
+      "dest": "/index.html",
+      "methods": ["GET"],
+      "headers": {
+        "x-vercel-render-mode": "dynamic"
+      }
+    }
+  ]
+}
