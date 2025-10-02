@@ -1,0 +1,30 @@
+<div class="top-container">
+  <h1>Rick y Morty</h1>
+
+  <div class="top-buttons">
+    <button mat-raised-button class="btn-blanco" [routerLink]="['/profile']">
+      Ir al perfil de {{ userName }}
+    </button>
+    <button mat-raised-button class="btn-blanco" (click)="logout()">
+      Cerrar sesión
+    </button>
+  </div>
+</div>
+
+
+<div>
+  <input type="text" [(ngModel)]="terminoBusqueda" placeholder="Buscar personaje" />
+  <div class="card-container">
+    <app-character-card *ngFor="let char of filterCharacters(terminoBusqueda)" [character]="char"></app-character-card>
+  </div>
+</div>
+
+<div class="pagination-buttons">
+  <button [disabled]="!info?.prev" (click)="goToPage(currentPage - 1)">
+    Anterior
+  </button>
+
+  <button [disabled]="!info?.next" (click)="goToPage(currentPage + 1)">
+    Siguiente
+  </button>
+</div>
