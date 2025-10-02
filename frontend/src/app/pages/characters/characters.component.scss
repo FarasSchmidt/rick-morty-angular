@@ -26,6 +26,15 @@ h1 {
   color: #ffffff;
 }
 
+.top-container {
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+
 .pagination-buttons {
   display: flex;
   justify-content: center;
@@ -56,3 +65,17 @@ h1 {
   border-color: #333;
   cursor: not-allowed;
 }
+
+.btn-blanco {
+  color: white !important;
+  border: 1px solid white;
+  border-radius: 10px;
+  margin-right: 10px;
+  display: grid;
+  justify-content: end;
+}
+.top-buttons {
+  display: flex;
+  gap: 1rem;
+}
+

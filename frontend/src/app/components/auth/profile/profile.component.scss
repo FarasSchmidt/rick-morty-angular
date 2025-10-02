@@ -1,0 +1,68 @@
+.container {
+  width: 600px;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 200px;
+}
+
+.login-container {
+  margin-top: 100px;
+  margin-left: 100px;
+  text-align: center;
+  height: 600px;
+  width: 500px;
+  padding: 80px;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+form h1 {
+  color: white;
+  margin-bottom: 30px;
+}
+
+mat-form-field.container {
+  margin-bottom: 20px;
+  color: white;
+}
+
+
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; 
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+
+  gap: 10px;
+  margin-top: 20px;
+}
+
+
+
+.btn-blanco {
+  color: white !important;
+  border: 1px solid white;
+  width: 300px;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+
+button[mat-raised-button].btn-blanco {
+  background-color: transparent !important;
+}
+
+button[mat-raised-button].btn-blanco:hover,
+button[mat-button].btn-blanco:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}

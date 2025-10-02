@@ -1,0 +1,36 @@
+<div class="login-container">
+  <form [formGroup]="form" (ngSubmit)="onSave()">
+    <h1>Editar perfil</h1>
+    <mat-form-field appearance="fill" class="container">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="container">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="container">
+      <mat-label>Contraseña</mat-label>
+      <input matInput type="password" formControlName="password" appPasswordStrength
+        (input)="onInputPassword($event.target.value)" />
+      <mat-hint *ngIf="passwordStrength" [style.color]="passwordStrengthColor">Fortaleza: {{ passwordStrength
+        }}</mat-hint>
+    </mat-form-field>
+
+    <!-- <div *ngIf="passwordStrength" [style.color]="passwordStrengthColor" style="margin-top: 5px;">
+    Fortaleza: {{ passwordStrength }}
+  </div> -->
+
+
+    <button mat-raised-button class="btn-blanco" type="submit">Guardar cambios</button>
+
+    <button mat-raised-button class="btn-blanco" type="button" (click)="logout()">Cerrar sesión</button>
+
+    <button mat-raised-button class="btn-blanco" type="button" [routerLink]="['/characters']" style="margin-bottom: 16px;">
+      Ir a personajes
+    </button>
+
+  </form>
+</div>

@@ -14,8 +14,8 @@ import { GenderTranslatePipe } from '../../pipes/gender-translate-pipe';
     StatusTranslatePipe,
     GenderTranslatePipe
   ],
-  styleUrls: ['./character-detail.css'],
-  templateUrl: './character-detail.html'
+  styleUrls: ['./character-detail.component.scss'],
+  templateUrl: './character-detail.component.html'
 })
 export class CharacterDetailComponent implements OnInit {
   character: any;
@@ -28,20 +28,24 @@ export class CharacterDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+    if (id && !isNaN(+id)) {
       this.rmService.getCharacterById(+id).subscribe(data => {
         this.character = data;
 
         const episodeUrls: string[] = data.episode;
         const episodeIds = episodeUrls.map(url => url.split('/').pop());
 
-        // Peticiones paralelas para traer los datos completos de cada episodio
         forkJoin(
-          episodeIds.map(id => this.rmService.getEpisodeById(+id!))
+          episodeIds
+            .filter(eid => eid && !isNaN(+eid))
+            .map(eid => this.rmService.getEpisodeById(+eid!))
         ).subscribe(episodesData => {
           this.episodes = episodesData;
         });
       });
+    } else {
+      this.character = null;
+      this.episodes = [];
     }
   }
 }
