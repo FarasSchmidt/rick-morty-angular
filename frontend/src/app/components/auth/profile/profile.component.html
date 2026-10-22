@@ -8,8 +8,11 @@
     <form [formGroup]="form" (ngSubmit)="onSave()" [attr.aria-busy]="submitting">
       <section class="photo-section" aria-labelledby="photo-title">
         <div class="profile-avatar">
-          <img *ngIf="profilePhoto; else noPhoto" [src]="profilePhoto" alt="Tu foto de perfil" width="88" height="88" />
-          <ng-template #noPhoto><span aria-hidden="true">{{ (form.controls.name.value || 'U').charAt(0).toUpperCase() }}</span></ng-template>
+          @if (profilePhoto) {
+            <img [src]="profilePhoto" alt="Tu foto de perfil" width="88" height="88" />
+          } @else {
+            <span aria-hidden="true">{{ (form.controls.name.value || 'U').charAt(0).toUpperCase() }}</span>
+          }
         </div>
         <div class="photo-controls">
           <h2 id="photo-title">Foto de perfil</h2>
@@ -17,9 +20,13 @@
           <input #photoInput class="photo-input" type="file" accept="image/jpeg,image/png,image/webp" (change)="selectPhoto($event)" [disabled]="submitting || photoProcessing" />
           <div class="photo-buttons">
             <button type="button" (click)="photoInput.click()" [disabled]="submitting || photoProcessing">{{ photoProcessing ? 'Procesando…' : 'Elegir foto' }}</button>
-            <button *ngIf="profilePhoto" type="button" (click)="removePhoto()" [disabled]="submitting || photoProcessing">Quitar foto</button>
+            @if (profilePhoto) {
+              <button type="button" (click)="removePhoto()" [disabled]="submitting || photoProcessing">Quitar foto</button>
+            }
           </div>
-          <p *ngIf="photoError" role="alert" class="photo-error">{{ photoError }}</p>
+          @if (photoError) {
+            <p role="alert" class="photo-error">{{ photoError }}</p>
+          }
           <p class="photo-help">La foto se actualiza al guardar los cambios.</p>
         </div>
       </section>
@@ -29,7 +36,9 @@
           <mat-form-field appearance="outline" subscriptSizing="fixed">
             <mat-label>Nombre</mat-label>
             <input matInput formControlName="name" autocomplete="name" maxlength="100" />
-            <mat-error *ngIf="form.controls.name.invalid">Ingresá un nombre válido.</mat-error>
+            @if (form.controls.name.invalid) {
+              <mat-error>Ingresá un nombre válido.</mat-error>
+            }
           </mat-form-field>
           <mat-form-field appearance="outline" subscriptSizing="fixed">
             <mat-label>Email</mat-label>
@@ -53,13 +62,17 @@
               appPasswordStrength (input)="onInputPassword(form.controls.password.value || '')" />
             <mat-hint class="password-feedback">
               <span>La contraseña debe tener al menos 6 caracteres.</span>
-              <span *ngIf="passwordStrength" [style.color]="passwordStrengthColor">Fortaleza: {{ passwordStrength }}</span>
+              @if (passwordStrength) {
+                <span [style.color]="passwordStrengthColor">Fortaleza: {{ passwordStrength }}</span>
+              }
             </mat-hint>
           </mat-form-field>
           <mat-form-field appearance="outline" subscriptSizing="dynamic">
             <mat-label>Repetir nueva contraseña</mat-label>
             <input matInput type="password" formControlName="confirmPassword" autocomplete="new-password" maxlength="128" [errorStateMatcher]="confirmationMatcher" />
-            <mat-error *ngIf="form.hasError('passwordMismatch')">Las contraseñas no coinciden.</mat-error>
+            @if (form.hasError('passwordMismatch')) {
+              <mat-error>Las contraseñas no coinciden.</mat-error>
+            }
           </mat-form-field>
         </div>
       </section>

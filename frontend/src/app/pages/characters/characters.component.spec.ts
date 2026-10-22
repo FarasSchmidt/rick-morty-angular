@@ -1,5 +1,5 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { CharactersComponent } from './characters.component';
@@ -18,7 +18,7 @@ describe('Characters search and pagination', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [CharactersComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([]),
+      providers: [provideHttpClient(withXhr()), provideHttpClientTesting(), provideRouter([]),
         { provide: AuthService, useValue: { getUser: () => ({ name: 'Demo' }), logout: () => {} } }],
     });
     fixture = TestBed.createComponent(CharactersComponent);
@@ -33,7 +33,7 @@ describe('Characters search and pagination', () => {
   it('queries all characters by name and keeps the filter when paging', () => {
     component.terminoBusqueda = ' Rick ';
     component.search();
-    expect(component.loading).toBeTrue();
+    expect(component.loading).toBe(true);
     http.expectOne(`${base}?page=1&name=Rick`).flush(response);
     component.goToPage(2);
     http.expectOne(`${base}?page=2&name=Rick`).flush({ ...response, info: { ...response.info, next: null, prev: base } });
@@ -49,7 +49,7 @@ describe('Characters search and pagination', () => {
     http.expectOne(`${base}?page=1&name=nonexistent`).flush({}, { status: 404, statusText: 'Not Found' });
     expect(component.error).toBe('');
     expect(component.characters).toEqual([]);
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     component.clearSearch();
     http.expectOne(`${base}?page=1`).flush(response);
     expect(component.info?.count).toBe(30);
@@ -62,7 +62,7 @@ describe('Characters search and pagination', () => {
     component.loadCharacters();
     http.expectOne(`${base}?page=1`).flush({}, { status: 500, statusText: 'Server Error' });
     expect(component.error).not.toBe('');
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     component.loadCharacters();
     http.expectOne(`${base}?page=1`).flush(response);
     expect(component.error).toBe('');
@@ -74,9 +74,9 @@ describe('Characters search and pagination', () => {
     const old = http.expectOne(`${base}?page=1&name=Rick`);
     component.terminoBusqueda = 'Morty';
     component.search();
-    expect(old.cancelled).toBeTrue();
+    expect(old.cancelled).toBe(true);
     http.expectOne(`${base}?page=1&name=Morty`).flush(response);
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     expect(component.appliedSearch).toBe('Morty');
   });
 });

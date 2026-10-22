@@ -20,7 +20,7 @@ Cada usuario puede administrar sus propios comentarios. Los administradores tamb
 
 | Parte | Tecnologías |
 | --- | --- |
-| Frontend | Angular 20, TypeScript, Angular Material, Bootstrap Grid y SCSS |
+| Frontend | Angular 22, TypeScript, Angular Material, Bootstrap Grid y SCSS |
 | Backend | NestJS 11, JWT, Mongoose y class-validator |
 | Base de datos | MongoDB Atlas |
 | Despliegue | Vercel y Render |
@@ -87,7 +87,7 @@ Abrí `http://localhost:4200`. El servidor de desarrollo utiliza el backend loca
 
 Desde `backend`, `npm test` compila y ejecuta las pruebas de autenticación, validación, contraseñas, perfiles y permisos de comentarios con persistencia simulada, sin escribir en Atlas.
 
-Desde `frontend`, `npm test` ejecuta las pruebas con Karma y requiere Chrome disponible. `npm run build` genera la versión de producción en `frontend/dist/rick-morty-angular/browser`.
+Desde `frontend`, `npm test` ejecuta las pruebas con Vitest y jsdom, sin necesitar Chrome. `npm run build` genera la versión de producción en `frontend/dist/rick-morty-angular/browser`.
 
 ## Administración
 

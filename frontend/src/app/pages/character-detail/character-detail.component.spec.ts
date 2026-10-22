@@ -1,5 +1,5 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -20,7 +20,7 @@ describe('Character detail', () => {
     params = new BehaviorSubject(convertToParamMap({ id: '1' }));
     TestBed.configureTestingModule({
       imports: [CharacterDetailComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([]),
+      providers: [provideHttpClient(withXhr()), provideHttpClientTesting(), provideRouter([]),
         { provide: ActivatedRoute, useValue: { paramMap: params } }],
     });
     fixture = TestBed.createComponent(CharacterDetailComponent);
@@ -43,13 +43,13 @@ describe('Character detail', () => {
 
   it('distinguishes missing characters and invalid ids from connection errors', () => {
     http.expectOne(`${base}/character/1`).flush({}, { status: 404, statusText: 'Not Found' });
-    expect(fixture.componentInstance.state.notFound).toBeTrue();
+    expect(fixture.componentInstance.state.notFound).toBe(true);
     params.next(convertToParamMap({ id: 'invalid' }));
-    expect(fixture.componentInstance.state.notFound).toBeTrue();
+    expect(fixture.componentInstance.state.notFound).toBe(true);
     http.expectNone(request => request.url.startsWith(base));
     params.next(convertToParamMap({ id: '2' }));
     http.expectOne(`${base}/character/2`).flush({}, { status: 503, statusText: 'Unavailable' });
-    expect(fixture.componentInstance.state.notFound).toBeFalse();
+    expect(fixture.componentInstance.state.notFound).toBe(false);
     expect(fixture.componentInstance.state.error).not.toBe('');
   });
 
@@ -60,6 +60,6 @@ describe('Character detail', () => {
     params.next(convertToParamMap({ id: '2' }));
     http.expectOne(`${base}/character/2`).flush({ ...character, id: 2, episode: [] });
     expect(fixture.componentInstance.state.episodes).toEqual([]);
-    expect(fixture.componentInstance.state.episodesLoading).toBeFalse();
+    expect(fixture.componentInstance.state.episodesLoading).toBe(false);
   });
 });

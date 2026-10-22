@@ -3,7 +3,7 @@
     <div class="col-lg-6 auth-art" aria-hidden="true">
       <img src="assets/img/loginImageView.png" alt="" width="600" height="600" />
     </div>
-    <section class="col-12 col-sm-10 col-md-8 col-lg-5">
+    <section class="col-12 col-sm-10 col-md-8 col-lg-6">
       <div class="auth-card">
         <h1>Creá tu cuenta</h1>
         <p class="auth-intro">Registrate para explorar el universo de Rick y Morty.</p>
@@ -11,26 +11,37 @@
           <mat-form-field appearance="outline" subscriptSizing="fixed">
             <mat-label>Nombre</mat-label>
             <input matInput formControlName="name" autocomplete="name" maxlength="100" />
-            <mat-error *ngIf="form.controls.name.invalid">Ingresá un nombre válido.</mat-error>
+            @if (form.controls.name.invalid) {
+              <mat-error>Ingresá un nombre válido.</mat-error>
+            }
           </mat-form-field>
           <mat-form-field appearance="outline" subscriptSizing="fixed">
             <mat-label>Email</mat-label>
             <input matInput formControlName="email" type="email" autocomplete="email" maxlength="254" />
-            <mat-error *ngIf="form.controls.email.invalid">Ingresá un correo válido.</mat-error>
+            @if (form.controls.email.invalid) {
+              <mat-error>Ingresá un correo válido.</mat-error>
+            }
           </mat-form-field>
           <mat-form-field appearance="outline" subscriptSizing="dynamic">
             <mat-label>Contraseña</mat-label>
             <input matInput type="password" formControlName="password" autocomplete="new-password" maxlength="128" appPasswordStrength (input)="onInputPassword(form.controls.password.value || '')" />
             <mat-hint class="password-feedback">
               <span>La contraseña debe tener al menos 6 caracteres.</span>
-              <span *ngIf="passwordStrength" [style.color]="passwordStrengthColor">Fortaleza: {{ passwordStrength }}</span>
+              @if (passwordStrength) {
+                <span [style.color]="passwordStrengthColor">Fortaleza: {{ passwordStrength }}</span>
+              }
             </mat-hint>
           </mat-form-field>
           <mat-form-field appearance="outline" subscriptSizing="dynamic">
             <mat-label>Repetir contraseña</mat-label>
             <input matInput type="password" formControlName="confirmPassword" autocomplete="new-password" maxlength="128" [errorStateMatcher]="confirmationMatcher" />
-            <mat-error *ngIf="form.controls.confirmPassword.hasError('required'); else mismatch">Repetí tu contraseña.</mat-error>
-            <ng-template #mismatch><mat-error *ngIf="form.hasError('passwordMismatch')">Las contraseñas no coinciden.</mat-error></ng-template>
+            @if (form.controls.confirmPassword.hasError('required')) {
+              <mat-error>Repetí tu contraseña.</mat-error>
+            } @else {
+              @if (form.hasError('passwordMismatch')) {
+                <mat-error>Las contraseñas no coinciden.</mat-error>
+              }
+            }
           </mat-form-field>
           <button class="submit-button" type="submit" [disabled]="submitting">{{ submitting ? 'Registrando…' : 'Registrarme' }}</button>
           <p class="auth-switch">¿Ya tenés cuenta? <a routerLink="/login">Iniciá sesión</a></p>

@@ -7,36 +7,63 @@
       <span id="comment-help">{{ text.value.length }} / 2000 caracteres</span>
       <button type="submit" [disabled]="saving">{{ saving ? 'Procesando…' : 'Publicar comentario' }}</button>
     </div>
-    <p *ngIf="text.invalid && text.touched" class="error" role="alert">Escribí un comentario de entre 1 y 2000 caracteres.</p>
+    @if (text.invalid && text.touched) {
+      <p class="error" role="alert">Escribí un comentario de entre 1 y 2000 caracteres.</p>
+    }
   </form>
-  <p *ngIf="actionError" class="error" role="alert">{{ actionError }}</p>
-  <p *ngIf="status" role="status">{{ status }}</p>
-  <p *ngIf="loading" role="status">Cargando comentarios…</p>
-  <div *ngIf="error" class="error" role="alert"><p>{{ error }}</p><button type="button" (click)="load()">Reintentar</button></div>
-  <p *ngIf="!loading && !error && !comments.length" class="muted">Todavía no hay comentarios. Podés ser el primero.</p>
+  @if (actionError) {
+    <p class="error" role="alert">{{ actionError }}</p>
+  }
+  @if (status) {
+    <p role="status">{{ status }}</p>
+  }
+  @if (loading) {
+    <p role="status">Cargando comentarios…</p>
+  }
+  @if (error) {
+    <div class="error" role="alert"><p>{{ error }}</p><button type="button" (click)="load()">Reintentar</button></div>
+  }
+  @if (!loading && !error && !comments.length) {
+    <p class="muted">Todavía no hay comentarios. Podés ser el primero.</p>
+  }
   <ul class="comment-list">
-    <li *ngFor="let comment of comments; trackBy: trackComment" [class.hidden-comment]="comment.hidden">
-      <header class="comment-header">
-        <img *ngIf="comment.author.profilePhoto; else initials" [src]="comment.author.profilePhoto" alt="" class="avatar" width="40" height="40" />
-        <ng-template #initials><span class="avatar initials" aria-hidden="true">{{ comment.author.name.charAt(0).toUpperCase() }}</span></ng-template>
-        <div><strong>{{ comment.author.name }}</strong><time [attr.datetime]="comment.createdAt">{{ comment.createdAt | date:'dd/MM/yyyy HH:mm' }}</time></div>
-        <span *ngIf="comment.hidden" class="hidden-label">Oculto</span>
-        <details *ngIf="comment.canManage" #menu class="comment-options" name="comment-options">
-          <summary [attr.aria-label]="'Opciones del comentario de ' + comment.author.name">...</summary>
-          <div class="options-dropdown">
-            <button type="button" (click)="menu.open = false; toggle(comment)" [disabled]="saving">{{ comment.hidden ? 'Volver a mostrar' : 'Ocultar' }}</button>
-            <button type="button" class="delete-option" (click)="menu.open = false; remove(comment)" [disabled]="saving">Borrar</button>
+    @for (comment of comments; track trackComment($index, comment)) {
+      <li [class.hidden-comment]="comment.hidden">
+        <header class="comment-header">
+          @if (comment.author.profilePhoto) {
+            <img [src]="comment.author.profilePhoto" alt="" class="avatar" width="40" height="40" />
+          } @else {
+            <span class="avatar initials" aria-hidden="true">{{ comment.author.name.charAt(0).toUpperCase() }}</span>
+          }
+          <div><strong>{{ comment.author.name }}</strong><time [attr.datetime]="comment.createdAt">{{ comment.createdAt | date:'dd/MM/yyyy HH:mm' }}</time></div>
+          @if (comment.hidden) {
+            <span class="hidden-label">Oculto</span>
+          }
+          @if (comment.canManage) {
+            <details #menu class="comment-options" name="comment-options">
+              <summary [attr.aria-label]="'Opciones del comentario de ' + comment.author.name">...</summary>
+              <div class="options-dropdown">
+                <button type="button" (click)="menu.open = false; toggle(comment)" [disabled]="saving">{{ comment.hidden ? 'Volver a mostrar' : 'Ocultar' }}</button>
+                <button type="button" class="delete-option" (click)="menu.open = false; remove(comment)" [disabled]="saving">Borrar</button>
+              </div>
+            </details>
+          }
+        </header>
+        <p class="comment-text">{{ comment.text }}</p>
+        @if (comment.hidden) {
+          <p class="muted">Solo vos, si sos el autor, y los administradores pueden ver este comentario.</p>
+        }
+        @if (comment.canManage && deletingId === comment.id) {
+          <div class="comment-actions delete-confirmation">
+            <p class="muted">El comentario se borrará definitivamente.</p>
+            <button type="button" (click)="remove(comment)" [disabled]="saving">Confirmar eliminación</button>
+            <button type="button" (click)="deletingId = null" [disabled]="saving">Cancelar</button>
           </div>
-        </details>
-      </header>
-      <p class="comment-text">{{ comment.text }}</p>
-      <p *ngIf="comment.hidden" class="muted">Solo vos, si sos el autor, y los administradores pueden ver este comentario.</p>
-      <div *ngIf="comment.canManage && deletingId === comment.id" class="comment-actions delete-confirmation">
-        <p class="muted">El comentario se borrará definitivamente.</p>
-        <button type="button" (click)="remove(comment)" [disabled]="saving">Confirmar eliminación</button>
-        <button type="button" (click)="deletingId = null" [disabled]="saving">Cancelar</button>
-      </div>
-    </li>
+        }
+      </li>
+    }
   </ul>
-  <button *ngIf="hasMore && !error" type="button" (click)="more()" [disabled]="loading || saving">Ver más comentarios</button>
+  @if (hasMore && !error) {
+    <button type="button" (click)="more()" [disabled]="loading || saving">Ver más comentarios</button>
+  }
 </section>

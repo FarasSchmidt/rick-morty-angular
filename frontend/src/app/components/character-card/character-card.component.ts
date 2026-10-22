@@ -1,13 +1,14 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+
 import { RouterModule } from '@angular/router';
 import { Character } from '../../types/character.type';
 
 @Component({
   selector: 'app-character-card',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './character-card.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./character-card.css']
 })
 export class CharacterCardComponent {

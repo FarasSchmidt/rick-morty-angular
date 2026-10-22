@@ -3,7 +3,7 @@
     <div class="col-lg-6 auth-art" aria-hidden="true">
       <img src="assets/img/loginImageView.png" alt="" width="600" height="600" />
     </div>
-    <section class="col-12 col-sm-10 col-md-8 col-lg-5">
+    <section class="col-12 col-sm-10 col-md-8 col-lg-6">
       <div class="auth-card">
         <h1>Iniciá sesión</h1>
         <p class="auth-intro">Entrá a tu cuenta para explorar los personajes.</p>
@@ -12,13 +12,17 @@
           <mat-form-field appearance="outline" subscriptSizing="fixed">
             <mat-label>Email</mat-label>
             <input matInput formControlName="email" type="email" autocomplete="email" maxlength="254" />
-            <mat-error *ngIf="form.controls.email.invalid">Ingresá un correo válido.</mat-error>
+            @if (form.controls.email.invalid) {
+              <mat-error>Ingresá un correo válido.</mat-error>
+            }
           </mat-form-field>
           <mat-form-field appearance="outline" subscriptSizing="fixed">
             <mat-label>Contraseña</mat-label>
             <input matInput type="password" formControlName="password" autocomplete="current-password" maxlength="128"  />
 
-            <mat-error *ngIf="form.controls.password.invalid">Ingresá tu contraseña.</mat-error>
+            @if (form.controls.password.invalid) {
+              <mat-error>Ingresá tu contraseña.</mat-error>
+            }
           </mat-form-field>
           <button class="submit-button" type="submit" [disabled]="submitting">{{ submitting ? 'Ingresando…' : 'Ingresar' }}</button>
           <p class="auth-switch">¿No tenés cuenta? <a routerLink="/register">Registrate</a></p>

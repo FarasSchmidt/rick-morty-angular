@@ -1,7 +1,7 @@
 import { CommentsComponent } from '../../components/comments/comments.component';
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, catchError, combineLatest, map, of, startWith, switchMap, timeout } from 'rxjs';
@@ -26,8 +26,9 @@ const initialState: DetailState = {
 
 @Component({
   selector: 'app-character-detail', standalone: true,
-  imports: [CommentsComponent, CommonModule, StatusTranslatePipe, GenderTranslatePipe],
+  imports: [CommentsComponent, StatusTranslatePipe, GenderTranslatePipe],
   styleUrls: ['./character-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './character-detail.component.html'
 })
 export class CharacterDetailComponent implements OnInit {

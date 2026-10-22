@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, HostListener, Input, OnChanges, inject } from '@angular/core';
+import { Component, DestroyRef, ElementRef, HostListener, Input, OnChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -7,7 +7,8 @@ import { CharacterComment, CommentsService } from '../../services/comments.servi
 
 @Component({
   selector: 'app-comments', standalone: true, imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './comments.component.html', styleUrl: './comments.component.scss'
+  templateUrl: './comments.component.html', changeDetection: ChangeDetectionStrategy.Eager,
+ styleUrl: './comments.component.scss'
 })
 export class CommentsComponent implements OnChanges {
   @Input({ required: true }) characterId!: number;

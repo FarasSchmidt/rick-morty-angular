@@ -1,14 +1,18 @@
-<header class="site-header" *ngIf="visible && user as currentUser">
-  <div class="container-fluid header-content">
-    <a routerLink="/characters" class="brand">Rick y Morty</a>
-    <nav aria-label="Navegación principal" class="d-flex flex-wrap gap-2">
-      <a routerLink="/characters" routerLinkActive="active" ariaCurrentWhenActive="page">Personajes</a>
-      <a routerLink="/profile" routerLinkActive="active" ariaCurrentWhenActive="page">Mi perfil</a>
-    </nav>
-    <div class="account d-flex flex-wrap align-items-center gap-3">
-      <img *ngIf="currentUser.profilePhoto" class="header-avatar" [src]="currentUser.profilePhoto" alt="Tu foto de perfil" width="36" height="36" />
-      <span class="user-name">{{ currentUser.name }}</span>
-      <button type="button" (click)="logout()">Cerrar sesión</button>
+@if (visible && user; as currentUser) {
+  <header class="site-header">
+    <div class="container-fluid header-content">
+      <a routerLink="/characters" class="brand">Rick y Morty</a>
+      <nav aria-label="Navegación principal" class="d-flex flex-wrap gap-2">
+        <a routerLink="/characters" routerLinkActive="active" ariaCurrentWhenActive="page">Personajes</a>
+        <a routerLink="/profile" routerLinkActive="active" ariaCurrentWhenActive="page">Mi perfil</a>
+      </nav>
+      <div class="account d-flex flex-wrap align-items-center gap-3">
+        @if (currentUser.profilePhoto) {
+          <img class="header-avatar" [src]="currentUser.profilePhoto" alt="Tu foto de perfil" width="36" height="36" />
+        }
+        <span class="user-name">{{ currentUser.name }}</span>
+        <button type="button" (click)="logout()">Cerrar sesión</button>
+      </div>
     </div>
-  </div>
-</header>
+  </header>
+}

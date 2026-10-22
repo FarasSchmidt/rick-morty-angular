@@ -1,5 +1,5 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, catchError, map, of, startWith, switchMap, timeout } from 'rxjs';
@@ -21,8 +21,9 @@ interface ListState {
 @Component({
   selector: 'app-characters',
   standalone: true,
-  imports: [CommonModule, CharacterCardComponent, FormsModule, RouterModule, MatButtonModule],
+  imports: [CharacterCardComponent, FormsModule, RouterModule, MatButtonModule],
   templateUrl: './characters.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: 'characters.component.scss'
 })
 export class CharactersComponent implements OnInit {

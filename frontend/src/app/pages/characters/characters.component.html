@@ -12,25 +12,43 @@
   </form>
 
   <section aria-label="Resultados de personajes" [attr.aria-busy]="loading">
-    <p *ngIf="loading" class="list-message" role="status">Cargando personajes…</p>
-    <div *ngIf="error" class="list-message" role="alert">
-      <p>{{ error }}</p>
-      <button type="button" (click)="loadCharacters()">Reintentar</button>
-    </div>
-    <p *ngIf="!loading && !error && !characters.length" class="list-message" role="status">
-      No encontramos personajes<span *ngIf="appliedSearch"> con el nombre «{{ appliedSearch }}»</span>.
+    @if (loading) {
+      <p class="list-message" role="status">Cargando personajes…</p>
+    }
+    @if (error) {
+      <div class="list-message" role="alert">
+        <p>{{ error }}</p>
+        <button type="button" (click)="loadCharacters()">Reintentar</button>
+      </div>
+    }
+    @if (!loading && !error && !characters.length) {
+      <p class="list-message" role="status">
+        No encontramos personajes@if (appliedSearch) {
+        <span> con el nombre «{{ appliedSearch }}»</span>
+        }.
+      </p>
+    }
+    @if (!loading && !error && info) {
+      <p class="results-summary" role="status">
+        {{ info.count }} resultados@if (appliedSearch) {
+        <span> para «{{ appliedSearch }}»</span>
+      }
     </p>
-    <p *ngIf="!loading && !error && info" class="results-summary" role="status">
-      {{ info.count }} resultados<span *ngIf="appliedSearch"> para «{{ appliedSearch }}»</span>
-    </p>
-    <div class="card-container" *ngIf="!loading && !error && characters.length">
-      <app-character-card *ngFor="let char of characters; trackBy: trackCharacter" [character]="char"></app-character-card>
+  }
+  @if (!loading && !error && characters.length) {
+    <div class="card-container">
+      @for (char of characters; track trackCharacter($index, char)) {
+        <app-character-card [character]="char"></app-character-card>
+      }
     </div>
-  </section>
+  }
+</section>
 
-  <nav *ngIf="info && !loading && !error" class="pagination-buttons" aria-label="Paginación de personajes">
+@if (info && !loading && !error) {
+  <nav class="pagination-buttons" aria-label="Paginación de personajes">
     <button type="button" [disabled]="!info.prev" (click)="goToPage(currentPage - 1)">Anterior</button>
     <span aria-current="page">Página {{ currentPage }} de {{ info.pages }}</span>
     <button type="button" [disabled]="!info.next" (click)="goToPage(currentPage + 1)">Siguiente</button>
   </nav>
+}
 </main>

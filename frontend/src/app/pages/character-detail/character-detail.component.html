@@ -1,55 +1,82 @@
 <main class="detail-page">
 
-  <p *ngIf="state.loading" class="message-panel" role="status">Cargando personaje…</p>
-  <section *ngIf="state.notFound" class="message-panel" aria-labelledby="not-found-title">
-    <h1 id="not-found-title">Personaje no encontrado</h1>
-    <p>El personaje que buscás no existe. Podés volver al listado y elegir otro.</p>
-  </section>
-  <div *ngIf="state.error" class="message-panel" role="alert">
-    <p>{{ state.error }}</p>
-    <button type="button" (click)="retry()">Reintentar</button>
-  </div>
+  @if (state.loading) {
+    <p class="message-panel" role="status">Cargando personaje…</p>
+  }
+  @if (state.notFound) {
+    <section class="message-panel" aria-labelledby="not-found-title">
+      <h1 id="not-found-title">Personaje no encontrado</h1>
+      <p>El personaje que buscás no existe. Podés volver al listado y elegir otro.</p>
+    </section>
+  }
+  @if (state.error) {
+    <div class="message-panel" role="alert">
+      <p>{{ state.error }}</p>
+      <button type="button" (click)="retry()">Reintentar</button>
+    </div>
+  }
 
-  <div *ngIf="state.character as character" class="character-layout">
-    <article class="character-info panel">
-      <img class="character-image" [src]="character.image" [alt]="character.name" width="300" height="300" />
-      <h1>{{ character.name }}</h1>
-      <dl>
-        <div><dt>Estado</dt><dd [class.status-alive]="character.status === 'Alive'"
+  @if (state.character; as character) {
+    <div class="character-layout">
+      <article class="character-info panel">
+        <img class="character-image" [src]="character.image" [alt]="character.name" width="300" height="300" />
+        <h1>{{ character.name }}</h1>
+        <dl>
+          <div><dt>Estado</dt><dd [class.status-alive]="character.status === 'Alive'"
           [class.status-dead]="character.status === 'Dead'" [class.status-unknown]="character.status === 'unknown'">
-          {{ character.status | statusTranslate }}</dd></div>
+        {{ character.status | statusTranslate }}</dd></div>
         <div><dt>Especie</dt><dd>{{ character.species }}</dd></div>
         <div><dt>Género</dt><dd>{{ character.gender | genderTranslate }}</dd></div>
         <div><dt>Origen</dt><dd>{{ character.origin.name }}</dd></div>
         <div><dt>Ubicación</dt><dd>{{ character.location.name }}</dd></div>
       </dl>
     </article>
-
     <section class="episode-list panel" aria-labelledby="episodes-title" [attr.aria-busy]="state.episodesLoading">
       <h2 id="episodes-title">Episodios</h2>
-      <p *ngIf="state.episodesLoading" role="status">Cargando episodios…</p>
-      <div *ngIf="state.episodesError" role="alert">
-        <p>{{ state.episodesError }}</p>
-        <button type="button" (click)="retry()">Reintentar</button>
-      </div>
-      <p *ngIf="!state.episodesLoading && !state.episodesError && !state.episodes.length">No hay episodios disponibles.</p>
-      <p *ngIf="state.episodes.length" class="episode-count">Aparece en {{ state.episodes.length }} episodios</p>
-      <ul id="character-episodes" *ngIf="state.episodes.length">
-        <li *ngFor="let episode of visibleEpisodes; trackBy: trackEpisode">
-          <span class="episode-code">{{ episode.episode }}</span>
-          <span>{{ episode.name }}</span>
-        </li>
-      </ul>
-      <footer *ngIf="state.episodes.length" class="episode-footer">
-        <p class="episode-progress" role="status">Mostrando {{ visibleEpisodes.length }} de {{ state.episodes.length }} episodios</p>
-        <div *ngIf="state.episodes.length > episodePageSize" class="episode-actions">
-          <button type="button" class="show-more" [disabled]="visibleEpisodeCount >= state.episodes.length"
-            aria-controls="character-episodes" (click)="showMoreEpisodes()">Ver más</button>
-          <button *ngIf="visibleEpisodeCount > episodePageSize" type="button" class="show-more"
-            aria-controls="character-episodes" (click)="showFewerEpisodes()">Ver menos</button>
+      @if (state.episodesLoading) {
+        <p role="status">Cargando episodios…</p>
+      }
+      @if (state.episodesError) {
+        <div role="alert">
+          <p>{{ state.episodesError }}</p>
+          <button type="button" (click)="retry()">Reintentar</button>
         </div>
-      </footer>
+      }
+      @if (!state.episodesLoading && !state.episodesError && !state.episodes.length) {
+        <p>No hay episodios disponibles.</p>
+      }
+      @if (state.episodes.length) {
+        <p class="episode-count">Aparece en {{ state.episodes.length }} episodios</p>
+      }
+      @if (state.episodes.length) {
+        <ul id="character-episodes">
+          @for (episode of visibleEpisodes; track trackEpisode($index, episode)) {
+            <li>
+              <span class="episode-code">{{ episode.episode }}</span>
+              <span>{{ episode.name }}</span>
+            </li>
+          }
+        </ul>
+      }
+      @if (state.episodes.length) {
+        <footer class="episode-footer">
+          <p class="episode-progress" role="status">Mostrando {{ visibleEpisodes.length }} de {{ state.episodes.length }} episodios</p>
+          @if (state.episodes.length > episodePageSize) {
+            <div class="episode-actions">
+              <button type="button" class="show-more" [disabled]="visibleEpisodeCount >= state.episodes.length"
+              aria-controls="character-episodes" (click)="showMoreEpisodes()">Ver más</button>
+              @if (visibleEpisodeCount > episodePageSize) {
+                <button type="button" class="show-more"
+                aria-controls="character-episodes" (click)="showFewerEpisodes()">Ver menos</button>
+              }
+            </div>
+          }
+        </footer>
+      }
     </section>
   </div>
-  <app-comments *ngIf="state.character as character" [characterId]="character.id"></app-comments>
+}
+@if (state.character; as character) {
+  <app-comments [characterId]="character.id"></app-comments>
+}
 </main>
