@@ -6,10 +6,10 @@ Angular se conecta localmente a `http://localhost:3000/api/auth`.
 
 ## Configuración local
 
-Desde esta carpeta, con Node.js 22 o superior:
+Entorno utilizado: Node.js 24.18.0 y npm 11.16.0. Desde esta carpeta:
 
 ```powershell
-npm install
+npm ci --include=dev
 Copy-Item .env.example .env
 ```
 
@@ -72,7 +72,7 @@ El índice único de MongoDB evita registros duplicados incluso con solicitudes 
 
 Ejecutá `npm test` para compilar y comprobar autenticación con persistencia simulada,
 validación de formularios, hashing y tokens. Estas pruebas no escriben en Atlas.
-Queda pendiente agregar limitación de intentos antes de publicar la API.
+Como mejora pendiente queda agregar limitación de intentos y solicitudes a la API.
 
 ## Fotos de usuarios y comentarios
 
