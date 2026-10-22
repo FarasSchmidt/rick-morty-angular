@@ -27,6 +27,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/config/auth-api.config.ts",
+                  "with": "src/app/config/auth-api.config.production.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
