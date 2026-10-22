@@ -1,12 +1,5 @@
-.container {
-  width: 600px;
-}
+@use '../auth-layout' as layout;
+@include layout.styles;
 
-form {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 200px;
-}
-
+.password-feedback { display: flex; flex-direction: column; gap: 4px; line-height: 1.4; color: #bbb; }
+mat-form-field:has(.password-feedback) { margin-bottom: 12px; }

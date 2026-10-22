@@ -1,36 +1,75 @@
-<div class="login-container">
-  <form [formGroup]="form" (ngSubmit)="onSave()">
-    <h1>Editar perfil</h1>
-    <mat-form-field appearance="fill" class="container">
-      <mat-label>Nombre</mat-label>
-      <input matInput formControlName="name" />
-    </mat-form-field>
+<main class="profile-page">
+  <section class="profile-card" aria-labelledby="profile-title">
+    <header class="profile-header">
+      <h1 id="profile-title">Mi perfil</h1>
+      <p>Actualizá tus datos y tu contraseña.</p>
+    </header>
 
-    <mat-form-field appearance="fill" class="container">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" />
-    </mat-form-field>
+    <form [formGroup]="form" (ngSubmit)="onSave()" [attr.aria-busy]="submitting">
+      <section class="photo-section" aria-labelledby="photo-title">
+        <div class="profile-avatar">
+          <img *ngIf="profilePhoto; else noPhoto" [src]="profilePhoto" alt="Tu foto de perfil" width="88" height="88" />
+          <ng-template #noPhoto><span aria-hidden="true">{{ (form.controls.name.value || 'U').charAt(0).toUpperCase() }}</span></ng-template>
+        </div>
+        <div class="photo-controls">
+          <h2 id="photo-title">Foto de perfil</h2>
+          <p>JPG, PNG o WebP. Hasta 5 MB.</p>
+          <input #photoInput class="photo-input" type="file" accept="image/jpeg,image/png,image/webp" (change)="selectPhoto($event)" [disabled]="submitting || photoProcessing" />
+          <div class="photo-buttons">
+            <button type="button" (click)="photoInput.click()" [disabled]="submitting || photoProcessing">{{ photoProcessing ? 'Procesando…' : 'Elegir foto' }}</button>
+            <button *ngIf="profilePhoto" type="button" (click)="removePhoto()" [disabled]="submitting || photoProcessing">Quitar foto</button>
+          </div>
+          <p *ngIf="photoError" role="alert" class="photo-error">{{ photoError }}</p>
+          <p class="photo-help">La foto se actualiza al guardar los cambios.</p>
+        </div>
+      </section>
+      <section class="form-section" aria-labelledby="personal-title">
+        <h2 id="personal-title">Datos personales</h2>
+        <div class="field-grid">
+          <mat-form-field appearance="outline" subscriptSizing="fixed">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="name" autocomplete="name" maxlength="100" />
+            <mat-error *ngIf="form.controls.name.invalid">Ingresá un nombre válido.</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" subscriptSizing="fixed">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" autocomplete="email" />
+          </mat-form-field>
+        </div>
+      </section>
 
-    <mat-form-field appearance="fill" class="container">
-      <mat-label>Contraseña</mat-label>
-      <input matInput type="password" formControlName="password" appPasswordStrength
-        (input)="onInputPassword($event.target.value)" />
-      <mat-hint *ngIf="passwordStrength" [style.color]="passwordStrengthColor">Fortaleza: {{ passwordStrength
-        }}</mat-hint>
-    </mat-form-field>
+      <section class="form-section" aria-labelledby="password-title">
+        <h2 id="password-title">Cambiar contraseña</h2>
+        <p class="section-description" id="password-help">Dejá los campos de contraseña vacíos para conservar tu contraseña actual.</p>
+        <div class="field-grid">
+          <mat-form-field appearance="outline" subscriptSizing="fixed">
+            <mat-label>Contraseña actual</mat-label>
+            <input matInput type="password" formControlName="currentPassword" autocomplete="current-password"
+              aria-describedby="password-help" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Nueva contraseña</mat-label>
+            <input matInput type="password" formControlName="password" autocomplete="new-password" maxlength="128"
+              appPasswordStrength (input)="onInputPassword(form.controls.password.value || '')" />
+            <mat-hint class="password-feedback">
+              <span>La contraseña debe tener al menos 6 caracteres.</span>
+              <span *ngIf="passwordStrength" [style.color]="passwordStrengthColor">Fortaleza: {{ passwordStrength }}</span>
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Repetir nueva contraseña</mat-label>
+            <input matInput type="password" formControlName="confirmPassword" autocomplete="new-password" maxlength="128" [errorStateMatcher]="confirmationMatcher" />
+            <mat-error *ngIf="form.hasError('passwordMismatch')">Las contraseñas no coinciden.</mat-error>
+          </mat-form-field>
+        </div>
+      </section>
 
-    <!-- <div *ngIf="passwordStrength" [style.color]="passwordStrengthColor" style="margin-top: 5px;">
-    Fortaleza: {{ passwordStrength }}
-  </div> -->
-
-
-    <button mat-raised-button class="btn-blanco" type="submit">Guardar cambios</button>
-
-    <button mat-raised-button class="btn-blanco" type="button" (click)="logout()">Cerrar sesión</button>
-
-    <button mat-raised-button class="btn-blanco" type="button" [routerLink]="['/characters']" style="margin-bottom: 16px;">
-      Ir a personajes
-    </button>
-
-  </form>
-</div>
+      <footer class="profile-actions">
+        <button class="save-button" type="submit" [disabled]="submitting || photoProcessing">
+          {{ submitting ? 'Guardando…' : 'Guardar cambios' }}
+        </button>
+        <button class="logout-button" type="button" [disabled]="submitting" (click)="logout()">Cerrar sesión</button>
+      </footer>
+    </form>
+  </section>
+</main>

@@ -1,0 +1,23 @@
+:host { display: block; }
+.site-header { background: #1e1e1e; color: #fff; border-bottom: 1px solid #444; }
+.header-content { display: flex; align-items: center; flex-wrap: wrap; gap: 20px; padding: 16px 24px; max-width: 1600px; margin: auto; }
+a { color: #ccc; text-decoration: none; }
+.brand { color: #fff; font-size: 22px; font-weight: 700; margin-right: 16px; }
+nav a, button { box-sizing: border-box; min-height: 44px; padding: 10px 14px; border: 1px solid transparent; border-radius: 8px; font: inherit; }
+nav a { display: inline-flex; align-items: center; }
+nav a.active { background: #333; border-color: #777; color: #fff; }
+nav a:hover, button:hover { background: #333; color: #fff; }
+.account { margin-left: auto; }
+nav { gap: 8px; }
+.account { gap: 16px; }
+.user-name { max-width: 250px; overflow-wrap: anywhere; }
+button { background: transparent; border-color: #777; color: #fff; cursor: pointer; }
+:where(a, button):focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+@media(max-width: 600px) {
+  .header-content { padding: 16px; gap: 12px; }
+  .brand { width: 100%; }
+  .account { width: 100%; margin-left: 0; justify-content: space-between; }
+  .user-name { max-width: 50%; }
+}
+
+.header-avatar { width: 36px; height: 36px; object-fit: cover; border-radius: 50%; border: 1px solid #777; }

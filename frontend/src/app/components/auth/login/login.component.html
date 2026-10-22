@@ -1,29 +1,29 @@
-<div style="display: flex; width: 90%;">
-  <div class="login-image">
-    <img src="assets/img/loginImageView.png" alt="Imagen de login" />
+<main class="auth-page container-fluid">
+  <div class="row align-items-center justify-content-center g-4 auth-layout">
+    <div class="col-lg-6 auth-art" aria-hidden="true">
+      <img src="assets/img/loginImageView.png" alt="" width="600" height="600" />
+    </div>
+    <section class="col-12 col-sm-10 col-md-8 col-lg-5">
+      <div class="auth-card">
+        <h1>Iniciá sesión</h1>
+        <p class="auth-intro">Entrá a tu cuenta para explorar los personajes.</p>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" [attr.aria-busy]="submitting">
 
+          <mat-form-field appearance="outline" subscriptSizing="fixed">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" autocomplete="email" maxlength="254" />
+            <mat-error *ngIf="form.controls.email.invalid">Ingresá un correo válido.</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" subscriptSizing="fixed">
+            <mat-label>Contraseña</mat-label>
+            <input matInput type="password" formControlName="password" autocomplete="current-password" maxlength="128"  />
 
-
-  </div>
-
-  <div class="login-container">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <h1>Iniciá sesión</h1>
-
-      <mat-form-field appearance="fill" class="container">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" type="email" />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="container">
-        <mat-label>Contraseña</mat-label>
-        <input matInput formControlName="password" type="password" />
-      </mat-form-field>
-
-      <div class="button-group">
-        <button mat-raised-button class="btn-blanco" type="submit">Ingresar</button>
-        <button mat-button class="btn-blanco" routerLink="/register" type="button">¿No tenés cuenta? Registrate</button>
+            <mat-error *ngIf="form.controls.password.invalid">Ingresá tu contraseña.</mat-error>
+          </mat-form-field>
+          <button class="submit-button" type="submit" [disabled]="submitting">{{ submitting ? 'Ingresando…' : 'Ingresar' }}</button>
+          <p class="auth-switch">¿No tenés cuenta? <a routerLink="/register">Registrate</a></p>
+        </form>
       </div>
-    </form>
+    </section>
   </div>
-</div>
+</main>

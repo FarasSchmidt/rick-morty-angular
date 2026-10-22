@@ -11,6 +11,8 @@ export class GenderTranslatePipe implements PipeTransform {
         return 'Masculino';
       case 'female':
         return 'Femenino';
+      case 'genderless':
+        return 'Sin género';
       default:
         return 'Desconocido';
     }

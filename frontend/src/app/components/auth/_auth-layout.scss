@@ -1,0 +1,29 @@
+@use '@angular/material' as mat;
+@mixin styles {
+  :host {
+    display: block; color: #fff; color-scheme: dark;
+    @include mat.form-field-overrides((
+      outlined-container-shape: 8px, container-height: 56px, container-vertical-padding: 16px,
+      outlined-input-text-color: #fff, outlined-label-text-color: #ccc,
+      outlined-caret-color: #fff, outlined-outline-color: #777,
+      outlined-hover-outline-color: #ddd, outlined-focus-outline-color: #fff,
+      outlined-focus-label-text-color: #fff, outlined-error-outline-color: #ffb4ab,
+      outlined-error-label-text-color: #ffb4ab, error-text-color: #ffb4ab
+    ));
+  }
+  .auth-page { padding: clamp(24px, 5vw, 64px) 16px; }
+  .auth-layout { max-width: 1200px; margin: 0 auto; }
+  .auth-art img { display: block; width: 100%; max-width: 540px; height: auto; margin: auto; object-fit: contain; }
+  .auth-card { box-sizing: border-box; padding: clamp(24px, 3vw, 40px); background: #1e1e1e; border: 1px solid #444; border-radius: 12px; box-shadow: 0 8px 24px rgb(0 0 0 / 20%); }
+  h1 { margin: 0 0 12px; font-size: 28px; }
+  .auth-intro { color: #bbb; margin: 0 0 28px; line-height: 1.6; }
+  form { display: flex; flex-direction: column; gap: 12px; }
+  mat-form-field { width: 100%; min-width: 0; }
+  .submit-button { min-height: 46px; padding: 12px 20px; background: #fff; color: #1e1e1e; border: 1px solid #fff; border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; }
+  .submit-button:hover:not(:disabled) { background: #ddd; }
+  .submit-button:disabled { opacity: .55; cursor: wait; }
+  .auth-switch { color: #bbb; margin: 12px 0 0; text-align: center; line-height: 1.8; }
+  .auth-switch a { color: #fff; font-weight: 600; text-underline-offset: 4px; }
+  :where(a, button):focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+  @media(max-width: 991px) { .auth-art { display: none; } }
+}

@@ -1,4 +1,5 @@
 .character-card {
+  box-sizing: border-box;
   display: block;  
   /* max-width: 220px;   */
   width: 100%;

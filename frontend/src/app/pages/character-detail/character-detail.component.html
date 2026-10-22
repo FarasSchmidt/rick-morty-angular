@@ -1,34 +1,55 @@
-<div *ngIf="character" class="character-detail-container">
-  <div class="character-row">
-    <div>
-      <div class="character-info blackBackground">
-        <img class="character-image" [src]="character.image" [alt]="character.name" />
-        <h2>Información</h2>
-        <p><strong>Nombre:</strong> {{ character.name }}</p>
-        <p>
-          <strong>Estado:</strong>
-          <span [ngClass]="{
-                'status-alive': character.status === 'Alive',
-                'status-dead': character.status === 'Dead',
-                'status-unknown': character.status === 'unknown'
-              }">
-            {{ character.status | statusTranslate }}
-          </span>
-        </p>
+<main class="detail-page">
 
-        <p><strong>Especie:</strong> {{ character.species }}</p>
-        <p><strong>Género:</strong> {{ character.gender | genderTranslate }}</p>
-        <p><strong>Origen:</strong> {{ character.origin.name }}</p>
-        <p><strong>Ubicación:</strong> {{ character.location.name }}</p>
-
-
-      </div>
-    </div>
-    <div class="episode-list blackBackground">
-      <h4>Episodios</h4>
-      <ul>
-        <li *ngFor="let ep of episodes"> {{ ep.episode }} - {{ ep.name }} </li>
-      </ul>
-    </div>
+  <p *ngIf="state.loading" class="message-panel" role="status">Cargando personaje…</p>
+  <section *ngIf="state.notFound" class="message-panel" aria-labelledby="not-found-title">
+    <h1 id="not-found-title">Personaje no encontrado</h1>
+    <p>El personaje que buscás no existe. Podés volver al listado y elegir otro.</p>
+  </section>
+  <div *ngIf="state.error" class="message-panel" role="alert">
+    <p>{{ state.error }}</p>
+    <button type="button" (click)="retry()">Reintentar</button>
   </div>
-</div>
+
+  <div *ngIf="state.character as character" class="character-layout">
+    <article class="character-info panel">
+      <img class="character-image" [src]="character.image" [alt]="character.name" width="300" height="300" />
+      <h1>{{ character.name }}</h1>
+      <dl>
+        <div><dt>Estado</dt><dd [class.status-alive]="character.status === 'Alive'"
+          [class.status-dead]="character.status === 'Dead'" [class.status-unknown]="character.status === 'unknown'">
+          {{ character.status | statusTranslate }}</dd></div>
+        <div><dt>Especie</dt><dd>{{ character.species }}</dd></div>
+        <div><dt>Género</dt><dd>{{ character.gender | genderTranslate }}</dd></div>
+        <div><dt>Origen</dt><dd>{{ character.origin.name }}</dd></div>
+        <div><dt>Ubicación</dt><dd>{{ character.location.name }}</dd></div>
+      </dl>
+    </article>
+
+    <section class="episode-list panel" aria-labelledby="episodes-title" [attr.aria-busy]="state.episodesLoading">
+      <h2 id="episodes-title">Episodios</h2>
+      <p *ngIf="state.episodesLoading" role="status">Cargando episodios…</p>
+      <div *ngIf="state.episodesError" role="alert">
+        <p>{{ state.episodesError }}</p>
+        <button type="button" (click)="retry()">Reintentar</button>
+      </div>
+      <p *ngIf="!state.episodesLoading && !state.episodesError && !state.episodes.length">No hay episodios disponibles.</p>
+      <p *ngIf="state.episodes.length" class="episode-count">Aparece en {{ state.episodes.length }} episodios</p>
+      <ul id="character-episodes" *ngIf="state.episodes.length">
+        <li *ngFor="let episode of visibleEpisodes; trackBy: trackEpisode">
+          <span class="episode-code">{{ episode.episode }}</span>
+          <span>{{ episode.name }}</span>
+        </li>
+      </ul>
+      <footer *ngIf="state.episodes.length" class="episode-footer">
+        <p class="episode-progress" role="status">Mostrando {{ visibleEpisodes.length }} de {{ state.episodes.length }} episodios</p>
+        <div *ngIf="state.episodes.length > episodePageSize" class="episode-actions">
+          <button type="button" class="show-more" [disabled]="visibleEpisodeCount >= state.episodes.length"
+            aria-controls="character-episodes" (click)="showMoreEpisodes()">Ver más</button>
+          <button *ngIf="visibleEpisodeCount > episodePageSize" type="button" class="show-more"
+            aria-controls="character-episodes" (click)="showFewerEpisodes()">Ver menos</button>
+        </div>
+      </footer>
+    </section>
+  </div>
+  <app-comments *ngIf="state.character as character" [characterId]="character.id"></app-comments>
+</main>

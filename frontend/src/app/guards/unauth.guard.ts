@@ -7,8 +7,7 @@ export const UnauthGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   if (auth.isAuthenticated()) {
-    router.navigate(['/profile']);
-    return false;
+    return router.createUrlTree(['/characters']);
   }
   return true;
 };

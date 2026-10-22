@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Character } from '../../types/character.type';
 
 @Component({
   selector: 'app-character-card',
@@ -10,5 +11,5 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./character-card.css']
 })
 export class CharacterCardComponent {
-  @Input() character!: any;
+  @Input({ required: true }) character!: Character;
 }

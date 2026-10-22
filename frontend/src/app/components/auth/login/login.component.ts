@@ -1,3 +1,4 @@
+import { finalize } from 'rxjs';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
@@ -31,23 +32,28 @@ export class LoginComponent {
   private snackBar = inject(MatSnackBar);
 
   form = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
+    password: ['', [Validators.required, Validators.maxLength(128)]],
   });
 
+  submitting = false;
   onSubmit(): void {
-    if (this.form.valid) {
-      const { email, password } = this.form.value;
-
-      const success = this.auth.login(email!, password!);
-      if (success) {
-        this.snackBar.open('Inicio de sesión exitoso', 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/characters']);
-      } else {
-        this.snackBar.open('Usuario o contraseña incorrectos', 'Cerrar', { duration: 3000 });
-      }
-    } else {
-      this.snackBar.open('Completa todos los campos correctamente', 'Cerrar', { duration: 3000 });
+    if (this.submitting) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.snackBar.open('Completá todos los campos correctamente.', 'Cerrar', { duration: 4000 });
+      return;
     }
+    this.submitting = true;
+    const values = this.form.getRawValue();
+    this.auth.login(values.email!, values.password!)
+      .pipe(finalize(() => this.submitting = false)).subscribe({
+        next: () => {
+          this.form.controls.password.reset();
+          this.snackBar.open('Inicio de sesión exitoso.', 'Cerrar', { duration: 4000 });
+          this.router.navigate(['/characters']);
+        },
+        error: (error: Error) => this.snackBar.open(error.message, 'Cerrar', { duration: 5000 })
+      });
   }
 }

@@ -1,30 +1,36 @@
-<div class="top-container">
-  <h1>Rick y Morty</h1>
+<h1 class="page-title">Personajes</h1>
 
-  <div class="top-buttons">
-    <button mat-raised-button class="btn-blanco" [routerLink]="['/profile']">
-      Ir al perfil de {{ userName }}
-    </button>
-    <button mat-raised-button class="btn-blanco" (click)="logout()">
-      Cerrar sesión
-    </button>
-  </div>
-</div>
+<main>
+  <form class="search-form" (ngSubmit)="search()" role="search">
+    <label for="character-search">Buscar personajes por nombre</label>
+    <div class="search-controls">
+      <input id="character-search" type="search" name="name" [(ngModel)]="terminoBusqueda"
+        placeholder="Por ejemplo: Rick" maxlength="100" />
+      <button type="submit">Buscar</button>
+      <button type="button" (click)="clearSearch()" [disabled]="!terminoBusqueda && !appliedSearch">Limpiar</button>
+    </div>
+  </form>
 
+  <section aria-label="Resultados de personajes" [attr.aria-busy]="loading">
+    <p *ngIf="loading" class="list-message" role="status">Cargando personajes…</p>
+    <div *ngIf="error" class="list-message" role="alert">
+      <p>{{ error }}</p>
+      <button type="button" (click)="loadCharacters()">Reintentar</button>
+    </div>
+    <p *ngIf="!loading && !error && !characters.length" class="list-message" role="status">
+      No encontramos personajes<span *ngIf="appliedSearch"> con el nombre «{{ appliedSearch }}»</span>.
+    </p>
+    <p *ngIf="!loading && !error && info" class="results-summary" role="status">
+      {{ info.count }} resultados<span *ngIf="appliedSearch"> para «{{ appliedSearch }}»</span>
+    </p>
+    <div class="card-container" *ngIf="!loading && !error && characters.length">
+      <app-character-card *ngFor="let char of characters; trackBy: trackCharacter" [character]="char"></app-character-card>
+    </div>
+  </section>
 
-<div>
-  <input type="text" [(ngModel)]="terminoBusqueda" placeholder="Buscar personaje" />
-  <div class="card-container">
-    <app-character-card *ngFor="let char of filterCharacters(terminoBusqueda)" [character]="char"></app-character-card>
-  </div>
-</div>
-
-<div class="pagination-buttons">
-  <button [disabled]="!info?.prev" (click)="goToPage(currentPage - 1)">
-    Anterior
-  </button>
-
-  <button [disabled]="!info?.next" (click)="goToPage(currentPage + 1)">
-    Siguiente
-  </button>
-</div>
+  <nav *ngIf="info && !loading && !error" class="pagination-buttons" aria-label="Paginación de personajes">
+    <button type="button" [disabled]="!info.prev" (click)="goToPage(currentPage - 1)">Anterior</button>
+    <span aria-current="page">Página {{ currentPage }} de {{ info.pages }}</span>
+    <button type="button" [disabled]="!info.next" (click)="goToPage(currentPage + 1)">Siguiente</button>
+  </nav>
+</main>

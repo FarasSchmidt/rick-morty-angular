@@ -1,6 +1,7 @@
+import { finalize } from 'rxjs';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService, User } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
@@ -10,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { PasswordStrengthDirective } from "../../../directives/password-strength.directive";
 import { getPasswordStrength } from '../../../utils/password-strength.util';
+import { passwordsMatch, PasswordConfirmationErrorMatcher } from '../../../utils/password-confirmation';
 
 
 @Component({
@@ -34,13 +36,15 @@ export class RegisterComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   passwordStrength = '';
   passwordStrengthColor = '';
+  confirmationMatcher = new PasswordConfirmationErrorMatcher();
 
 
   form = this.fb.group({
-    name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
-  });
+    name: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(100)]],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
+    password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(128)]],
+    confirmPassword: ['', [Validators.required, Validators.maxLength(128)]],
+  }, { validators: passwordsMatch });
 
   ngOnInit(): void { }
 
@@ -51,17 +55,25 @@ export class RegisterComponent implements OnInit {
   }
 
 
+  submitting = false;
   onSubmit(): void {
-    if (this.form.valid) {
-      const success = this.auth.register(this.form.value as User);
-      if (success) {
-        this.snackBar.open('Registro exitoso', 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/characters']);
-      } else {
-        this.snackBar.open('Ese correo ya está registrado', 'Cerrar', { duration: 3000 });
-      }
+    if (this.submitting) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.snackBar.open('Completá todos los campos correctamente.', 'Cerrar', { duration: 4000 });
+      return;
     }
+    this.submitting = true;
+    const values = this.form.getRawValue();
+    this.auth.register({ name: values.name!, email: values.email!, password: values.password! })
+      .pipe(finalize(() => this.submitting = false)).subscribe({
+        next: () => {
+          this.form.controls.password.reset();
+          this.form.controls.confirmPassword.reset();
+          this.snackBar.open('Registro exitoso. Ahora podés iniciar sesión.', 'Cerrar', { duration: 4000 });
+          this.router.navigate(['/login']);
+        },
+        error: (error: Error) => this.snackBar.open(error.message, 'Cerrar', { duration: 5000 })
+      });
   }
-
-
 }
