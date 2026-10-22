@@ -6,7 +6,6 @@
 /out-tsc
 /bazel-out
 /public
-/dist
 # Node
 /node_modules
 npm-debug.log
@@ -30,6 +29,7 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
+/.firebase/
 /.angular/cache
 .sass-cache/
 /connect.lock
