@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, catchError, map, of, startWith, switchMap, timeout } from 'rxjs';
 import { RickMortyService } from '../../services/rick-morty.service';
+import { CATALOG_TIMEOUT_MS } from '../../config/request-timeouts';
 import { CharacterCardComponent } from '../../components/character-card/character-card.component';
 import { FormsModule } from '@angular/forms';
 import { Character, PaginationInfo } from '../../types/character.type';
@@ -47,7 +48,7 @@ export class CharactersComponent implements OnInit {
     this.userName = this.auth.getUser()?.name ?? '';
     this.requests.pipe(
       switchMap(({ page, name }) => this.rmService.getCharacters(page, name).pipe(
-        timeout(15000),
+        timeout(CATALOG_TIMEOUT_MS),
         map(response => ({ characters: response.results, info: response.info, loading: false, error: '' } as ListState)),
         catchError((error: unknown) => of<ListState>({
           characters: [], info: null, loading: false,

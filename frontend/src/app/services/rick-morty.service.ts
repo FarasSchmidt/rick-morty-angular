@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map, of } from 'rxjs';
+import { Observable, defer, map, of, tap } from 'rxjs';
 import { Character, CharacterResponse } from '../types/character.type';
 
 export interface EpisodeSummary { id: number; name: string; episode: string; }
@@ -9,6 +9,19 @@ export interface EpisodeSummary { id: number; name: string; episode: string; }
   providedIn: 'root'
 })
 export class RickMortyService {
+  private cache = new Map<string, { value: unknown; expires: number }>();
+
+  private cachedGet<T>(url: string): Observable<T> {
+    return defer(() => {
+      const cached = this.cache.get(url);
+      if (cached && cached.expires > Date.now()) return of(cached.value as T);
+      this.cache.delete(url);
+      return this.http.get<T>(url).pipe(tap(value => {
+        if (this.cache.size >= 80) this.cache.delete(this.cache.keys().next().value!);
+        this.cache.set(url, { value, expires: Date.now() + 5 * 60_000 });
+      }));
+    });
+  }
   private API_URL = 'https://rickandmortyapi.com/api';
 
   constructor(private http: HttpClient) { }
@@ -20,7 +33,7 @@ export class RickMortyService {
   }
 
   getCharacterById(id: number): Observable<Character> {
-    return this.http.get<Character>(`${this.API_URL}/character/${id}`);
+    return this.cachedGet<Character>(`${this.API_URL}/character/${id}`);
   }
 
   getEpisodeById(id: number): Observable<{ name: string; episode: string }> {
@@ -30,7 +43,7 @@ export class RickMortyService {
   getEpisodesByIds(ids: number[]): Observable<EpisodeSummary[]> {
     const uniqueIds = [...new Set(ids.filter(id => Number.isSafeInteger(id) && id > 0))];
     if (!uniqueIds.length) return of([]);
-    return this.http.get<EpisodeSummary | EpisodeSummary[]>(`${this.API_URL}/episode/${uniqueIds.join(',')}`)
+    return this.cachedGet<EpisodeSummary | EpisodeSummary[]>(`${this.API_URL}/episode/${uniqueIds.join(',')}`)
       .pipe(map(response => Array.isArray(response) ? response : [response]));
   }
 

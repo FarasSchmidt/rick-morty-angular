@@ -36,7 +36,7 @@ describe('Character detail', () => {
     expect(fixture.componentInstance.state.character?.name).toBe('Rick');
     expect(fixture.componentInstance.state.episodesError).not.toBe('');
     fixture.componentInstance.retry();
-    http.expectOne(`${base}/character/1`).flush(character);
+    http.expectNone(`${base}/character/1`);
     http.expectOne(`${base}/episode/1,2`).flush([{ id: 1, name: 'Pilot', episode: 'S01E01' }]);
     expect(fixture.componentInstance.state.episodesError).toBe('');
   });

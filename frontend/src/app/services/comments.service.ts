@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError, timeout } from 'rxjs';
 import { AuthService } from './auth.service';
 import { AUTH_API_URL } from '../config/auth-api.config';
+import { BACKEND_TIMEOUT_MS } from '../config/request-timeouts';
 
 export interface CharacterComment {
   id: string; text: string; hidden: boolean; createdAt: string; canManage: boolean;
@@ -31,7 +32,7 @@ export class CommentsService {
     const token = this.auth.getToken();
     if (!token) return throwError(() => new Error('Iniciá sesión para continuar.'));
     return this.http.request<T>(method, this.base + path, { body, headers: { Authorization: 'Bearer ' + token } })
-      .pipe(timeout(15000), catchError((error: unknown) => {
+      .pipe(timeout(BACKEND_TIMEOUT_MS), catchError((error: unknown) => {
         let message = 'No pudimos conectar con el servicio de comentarios. Intentá nuevamente.';
         if (error instanceof HttpErrorResponse && error.status) {
           message = ({ 400: 'Revisá el comentario: debe tener entre 1 y 2000 caracteres.',

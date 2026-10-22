@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, tap, throwError, timeout } from 'rxjs';
 import { AUTH_API_URL } from '../config/auth-api.config';
+import { BACKEND_TIMEOUT_MS } from '../config/request-timeouts';
 
 export interface User { id: string; name: string; email: string; role: string; profilePhoto?: string; }
 export interface RegisterInput { name: string; email: string; password: string; }
@@ -17,12 +18,12 @@ export class AuthService {
   register(input: RegisterInput): Observable<void> {
     return this.http.post<UserResponse>(AUTH_API_URL + '/register', {
       name: input.name.trim(), email: input.email.trim(), password: input.password
-    }).pipe(timeout(15000), map(() => undefined), catchError(error => this.handleError(error)));
+    }).pipe(timeout(BACKEND_TIMEOUT_MS), map(() => undefined), catchError(error => this.handleError(error)));
   }
 
   login(email: string, password: string): Observable<User> {
     return this.http.post<Session>(AUTH_API_URL + '/login', { email: email.trim(), password })
-      .pipe(timeout(15000), map(session => {
+      .pipe(timeout(BACKEND_TIMEOUT_MS), map(session => {
         if (!this.validUser(session?.user) || !this.validToken(session?.token)) {
           throw new Error('El servidor devolvió una sesión inválida.');
         }
@@ -46,7 +47,7 @@ export class AuthService {
     const request = input
       ? this.http.put<UserResponse>(AUTH_API_URL + '/profile', input, options)
       : this.http.get<UserResponse>(AUTH_API_URL + '/profile', options);
-    return request.pipe(timeout(15000), map(response => {
+    return request.pipe(timeout(BACKEND_TIMEOUT_MS), map(response => {
       if (!this.validUser(response?.user)) throw new Error('El servidor devolvió un perfil inválido.');
       return response.user;
     }), tap(user => this.saveSession({ user, token: session.token })),

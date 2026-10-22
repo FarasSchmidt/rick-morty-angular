@@ -26,6 +26,9 @@
           </mat-form-field>
           <button class="submit-button" type="submit" [disabled]="submitting">{{ submitting ? 'Ingresando…' : 'Ingresar' }}</button>
           <p class="auth-switch">¿No tenés cuenta? <a routerLink="/register">Registrate</a></p>
+          @if (submitting && slowRequest) {
+            <p class="auth-switch" role="status">El servicio está tardando en responder. Esperá un momento; no hace falta volver a ingresar tus datos.</p>
+          }
         </form>
       </div>
     </section>

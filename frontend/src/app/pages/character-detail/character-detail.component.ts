@@ -7,6 +7,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, catchError, combineLatest, map, of, startWith, switchMap, timeout } from 'rxjs';
 import { EpisodeSummary, RickMortyService } from '../../services/rick-morty.service';
 import { Character } from '../../types/character.type';
+import { CATALOG_TIMEOUT_MS } from '../../config/request-timeouts';
 import { StatusTranslatePipe } from '../../pipes/status-translate-pipe';
 import { GenderTranslatePipe } from '../../pipes/gender-translate-pipe';
 
@@ -61,12 +62,12 @@ export class CharacterDetailComponent implements OnInit {
           return of<DetailState>({ ...initialState, notFound: true });
         }
         return this.rmService.getCharacterById(id).pipe(
-          timeout(15000),
+          timeout(CATALOG_TIMEOUT_MS),
           switchMap(character => {
             const loaded = { ...initialState, character };
             const ids = character.episode.map(url => Number(url.split('/').pop()));
             return this.rmService.getEpisodesByIds(ids).pipe(
-              timeout(15000),
+              timeout(CATALOG_TIMEOUT_MS),
               map(episodes => ({ ...loaded, episodes })),
               catchError(() => of<DetailState>({ ...loaded, episodesError: 'No pudimos cargar los episodios.' })),
               startWith<DetailState>({ ...loaded, episodesLoading: ids.length > 0 })

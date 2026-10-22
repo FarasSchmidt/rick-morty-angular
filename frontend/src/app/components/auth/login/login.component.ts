@@ -1,5 +1,5 @@
 import { finalize } from 'rxjs';
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
@@ -37,6 +37,13 @@ export class LoginComponent {
   });
 
   submitting = false;
+  slowRequest = false;
+  private slowTimer?: ReturnType<typeof setTimeout>;
+  private destroyRef = inject(DestroyRef);
+
+  constructor() {
+    this.destroyRef.onDestroy(() => clearTimeout(this.slowTimer));
+  }
   onSubmit(): void {
     if (this.submitting) return;
     if (this.form.invalid) {
@@ -45,9 +52,15 @@ export class LoginComponent {
       return;
     }
     this.submitting = true;
+    this.slowRequest = false;
+    this.slowTimer = setTimeout(() => this.slowRequest = true, 8000);
     const values = this.form.getRawValue();
     this.auth.login(values.email!, values.password!)
-      .pipe(finalize(() => this.submitting = false)).subscribe({
+      .pipe(finalize(() => {
+        clearTimeout(this.slowTimer);
+        this.submitting = false;
+        this.slowRequest = false;
+      })).subscribe({
         next: () => {
           this.form.controls.password.reset();
           this.snackBar.open('Inicio de sesión exitoso.', 'Cerrar', { duration: 4000 });
